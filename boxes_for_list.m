@@ -25,7 +25,12 @@ function boxes_for_list(set_file, img_path_pattern, save_path_pattern)
         img_path = sprintf(img_path_pattern, img);
         save_path = sprintf(save_path_pattern, img);
         I = imread(img_path);
-        bbs=edgeBoxes(I,model,opts);
+        try
+            bbs=edgeBoxes(I,model,opts);
+        catch ME
+            fprintf('error: %s\n', ME.message);
+            bbs = zeros(0, 5);
+        end
 
         bbs = [bbs(:, 5), bbs(:, 1), bbs(:, 2), bbs(:, 1) + bbs(:, 3), bbs(:, 4) + bbs(:, 2)];
         dlmwrite(save_path, bbs);
